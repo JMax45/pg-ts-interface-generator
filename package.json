@@ -1,0 +1,34 @@
+{
+  "name": "pg-ts-interface-generator",
+  "version": "1.0.0",
+  "description": "Generate TypeScript interfaces from PostgreSQL database",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p tsconfig.json",
+    "start": "node build/bin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JMax45/pg-ts-interface-generator.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "Postgres",
+    "PostgreSQL"
+  ],
+  "author": "JMax45",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JMax45/pg-ts-interface-generator/issues"
+  },
+  "homepage": "https://github.com/JMax45/pg-ts-interface-generator#readme",
+  "dependencies": {
+    "commander": "^11.0.0",
+    "pg": "^8.11.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.2",
+    "@types/pg": "^8.10.2"
+  }
+}
