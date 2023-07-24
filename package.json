@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Generate TypeScript interfaces from PostgreSQL database",
   "main": "build/index.js",
+  "bin": "build/bin.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p tsconfig.json",
