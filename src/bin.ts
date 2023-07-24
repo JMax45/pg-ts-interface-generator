@@ -6,6 +6,7 @@ import inquirer from 'inquirer';
 import { Client, QueryResult } from 'pg';
 import InterfaceGenerator from './InterfaceGenerator';
 import mapDataType from './mapDataType';
+import path from 'path';
 
 const program = new Command();
 
@@ -18,6 +19,7 @@ program
   .option('-p <char>', 'Postgres port')
   .option('-d <char>', 'Postgres database name')
   .action(async (options) => {
+    options.o = path.resolve(options.o);
     const client = new Client({
       connectionString: options.c,
       user: options.U,
@@ -78,6 +80,7 @@ program
     }
 
     await client.end();
+    console.log(`The schema was successfully saved to '${options.o}'`);
   });
 
 program.parse();
