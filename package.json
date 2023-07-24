@@ -25,9 +25,11 @@
   "homepage": "https://github.com/JMax45/pg-ts-interface-generator#readme",
   "dependencies": {
     "commander": "^11.0.0",
+    "inquirer": "^8.2.5",
     "pg": "^8.11.1"
   },
   "devDependencies": {
+    "@types/inquirer": "^8.2.6",
     "@types/node": "^20.4.2",
     "@types/pg": "^8.10.2"
   }

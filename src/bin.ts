@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { appendFile, rm } from 'fs/promises';
+import inquirer from 'inquirer';
 import { Client, QueryResult } from 'pg';
 import InterfaceGenerator from './InterfaceGenerator';
 import mapDataType from './mapDataType';
@@ -12,9 +13,28 @@ program
   .name('pg-ts-interface-generator')
   .option('-c <char>', 'Connection string')
   .option('-o <char>', 'Output file')
+  .option('-h <char>', 'Postgres host')
+  .option('-U <char>', 'Postgres user')
+  .option('-p <char>', 'Postgres port')
+  .option('-d <char>', 'Postgres database name')
   .action(async (options) => {
     const client = new Client({
       connectionString: options.c,
+      user: options.U,
+      password: async () => {
+        return (
+          await inquirer.prompt([
+            {
+              name: 'password',
+              message: 'Please enter the password of the database',
+              type: 'password',
+            },
+          ])
+        ).password;
+      },
+      host: options.h,
+      port: parseInt(options.p),
+      database: options.d,
     });
     try {
       await client.connect();
