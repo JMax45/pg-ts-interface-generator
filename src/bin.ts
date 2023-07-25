@@ -51,7 +51,8 @@ program
         SELECT
             table_name,
             to_json(array_agg(column_name)) AS column_names,
-            to_json(array_agg(data_type)) AS data_types
+            to_json(array_agg(data_type)) AS data_types,
+            to_json(array_agg(is_nullable)) AS is_nullable
         FROM
             information_schema.columns
         WHERE
@@ -74,7 +75,9 @@ program
     for (const table of res.rows) {
       const generator = new InterfaceGenerator(table.table_name);
       for (let i = 0; i < table.column_names.length; i++) {
-        generator.add(table.column_names[i], mapDataType(table.data_types[i]));
+        generator.add(table.column_names[i], mapDataType(table.data_types[i]), {
+          nullable: table.is_nullable[i] === 'YES' ? true : false,
+        });
       }
       await appendFile(options.o, `${generator.export()}\n\n`);
     }

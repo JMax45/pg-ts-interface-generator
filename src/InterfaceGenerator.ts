@@ -1,3 +1,7 @@
+interface additionalOptions {
+  nullable?: boolean;
+}
+
 class InterfaceGenerator {
   private structure: any;
   private interfaceName: string;
@@ -5,17 +9,19 @@ class InterfaceGenerator {
     this.structure = {};
     this.interfaceName = interfaceName;
   }
-  add(key: string, type: string) {
-    this.structure[key] = type;
+  add(key: string, type: string, options?: additionalOptions) {
+    this.structure[key] = { value: type, ...options };
   }
   export() {
     let returnStr = `interface ${this.interfaceName} {\n`;
 
     for (const key of Object.keys(this.structure)) {
       returnStr += '\t';
-      if (typeof this.structure[key] === 'object') {
+      if (typeof this.structure[key].value === 'object') {
       } else {
-        returnStr += `${key}: ${this.structure[key]};\n`;
+        returnStr += `${key}${this.structure[key].nullable ? '?' : ''}: ${
+          this.structure[key].value
+        };\n`;
       }
     }
 
