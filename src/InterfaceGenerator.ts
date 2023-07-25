@@ -1,5 +1,6 @@
 interface additionalOptions {
   nullable?: boolean;
+  comment?: string;
 }
 
 class InterfaceGenerator {
@@ -16,10 +17,11 @@ class InterfaceGenerator {
     let returnStr = `interface ${this.interfaceName} {\n`;
 
     for (const key of Object.keys(this.structure)) {
-      returnStr += '\t';
       if (typeof this.structure[key].value === 'object') {
       } else {
-        returnStr += `${key}${this.structure[key].nullable ? '?' : ''}: ${
+        if (this.structure[key].comment)
+          returnStr += `\t/** ${this.structure[key].comment} */\n`;
+        returnStr += `\t${key}${this.structure[key].nullable ? '?' : ''}: ${
           this.structure[key].value
         };\n`;
       }
