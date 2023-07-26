@@ -1,3 +1,7 @@
+interface generatorAdditionalOptions {
+  comment?: string;
+}
+
 interface additionalOptions {
   nullable?: boolean;
   comment?: string;
@@ -6,15 +10,20 @@ interface additionalOptions {
 class InterfaceGenerator {
   private structure: any;
   private interfaceName: string;
-  constructor(interfaceName: string) {
+  private options?: generatorAdditionalOptions;
+  constructor(interfaceName: string, options?: generatorAdditionalOptions) {
     this.structure = {};
     this.interfaceName = interfaceName;
+    this.options = options;
   }
   add(key: string, type: string, options?: additionalOptions) {
     this.structure[key] = { value: type, ...options };
   }
   export() {
-    let returnStr = `interface ${this.interfaceName} {\n`;
+    let returnStr = ``;
+    if (this.options && this.options.comment)
+      returnStr += `/** ${this.options.comment} */\n`;
+    returnStr += `interface ${this.interfaceName} {\n`;
 
     for (const key of Object.keys(this.structure)) {
       if (typeof this.structure[key].value === 'object') {
