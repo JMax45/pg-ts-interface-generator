@@ -7,13 +7,14 @@ import { Client, QueryResult } from 'pg';
 import InterfaceGenerator from './InterfaceGenerator';
 import mapDataType from './mapDataType';
 import path from 'path';
+import tableMetadataQuery from './tableMetadataQuery';
 
 const program = new Command();
 
 program
   .name('pg-ts-interface-generator')
   .option('-c <char>', 'Connection string')
-  .option('-o <char>', 'Output file')
+  .requiredOption('-o <char>', 'Output file')
   .option('-h <char>', 'Postgres host')
   .option('-U <char>', 'Postgres user')
   .option('-p <char>', 'Postgres port')
@@ -25,13 +26,11 @@ program
       user: options.U,
       password: async () => {
         return (
-          await inquirer.prompt([
-            {
-              name: 'password',
-              message: 'Please enter the password of the database',
-              type: 'password',
-            },
-          ])
+          await inquirer.prompt({
+            name: 'password',
+            message: 'Please enter the password of the database',
+            type: 'password',
+          })
         ).password;
       },
       host: options.h,
@@ -46,25 +45,7 @@ program
     }
     let res: QueryResult<any> | undefined = undefined;
     try {
-      res = await client.query(
-        `
-        SELECT
-            table_name,
-            to_json(array_agg(column_name)) AS column_names,
-            to_json(array_agg(data_type)) AS data_types,
-            to_json(array_agg(is_nullable)) AS is_nullable,
-            json_agg(col_description((SELECT oid FROM pg_class WHERE relname = table_name), ordinal_position)) AS column_comments,
-            obj_description((SELECT oid FROM pg_class WHERE relname = table_name), 'pg_class') AS table_comment
-        FROM
-            information_schema.columns
-        WHERE
-            table_catalog = current_database()
-            AND table_schema = $1
-        GROUP BY
-            table_name;
-        `,
-        ['public']
-      );
+      res = await client.query(tableMetadataQuery, ['public']);
     } catch (err) {
       console.error('Failed to extract data from database', err);
     }
