@@ -65,6 +65,14 @@ interface users {
 
 This allows you to add meaningful descriptions and documentation to your interfaces based on the comments you've already added in the database schema.
 
+## Omitting Comments
+
+You can omit comments in the generated TypeScript interfaces by using the `--no-comments` option:
+
+```shell
+pg-ts-interface-generator -c postgres://user:password@host:5432/dbname -o schema.ts --no-comments
+```
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
