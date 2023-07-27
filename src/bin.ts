@@ -19,6 +19,7 @@ program
   .option('-U <char>', 'Postgres user')
   .option('-p <char>', 'Postgres port')
   .option('-d <char>', 'Postgres database name')
+  .option('--no-comments', 'Disable comments in generated file')
   .action(async (options) => {
     options.o = path.resolve(options.o);
     const client = new Client({
@@ -57,12 +58,12 @@ program
 
     for (const table of res.rows) {
       const generator = new InterfaceGenerator(table.table_name, {
-        comment: table.table_comment,
+        comment: options.comments ? table.table_comment : null,
       });
       for (let i = 0; i < table.column_names.length; i++) {
         generator.add(table.column_names[i], mapDataType(table.data_types[i]), {
           nullable: table.is_nullable[i] === 'YES' ? true : false,
-          comment: table.column_comments[i],
+          comment: options.comments ? table.column_comments[i] : null,
         });
       }
       await appendFile(options.o, `${generator.export()}\n\n`);
