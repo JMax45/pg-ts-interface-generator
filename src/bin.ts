@@ -8,6 +8,7 @@ import InterfaceGenerator from './InterfaceGenerator';
 import mapDataType from './mapDataType';
 import path from 'path';
 import tableMetadataQuery from './tableMetadataQuery';
+import topComment from './topComment';
 
 const program = new Command();
 
@@ -55,6 +56,8 @@ program
     try {
       await rm(options.o);
     } catch (err) {}
+
+    if (options.comments) await appendFile(options.o, `${topComment}\n\n`);
 
     for (const table of res.rows) {
       const generator = new InterfaceGenerator(table.table_name, {
